@@ -1,0 +1,91 @@
+<apex:page controller="TaxSvcTestDemo">
+<html>
+<body>
+<font face="arial">
+<table border="0" width="50%" cellpadding="5"><col width="10%"/><col width="40%"/>
+<tr><th><h1>Credentials</h1></th><th/></tr>
+<apex:form >
+<tr><td><h1>Service URL:</h1></td><td><apex:inputText value="{!SvcURL}" size="30" tabindex="1"/></td></tr>
+<tr><td><h1>UserName:</h1></td><td><apex:inputText value="{!UserName}" size="30" tabindex="2"/></td></tr>
+<tr><td><h1>Password:</h1></td><td><apex:inputSecret value="{!PassWord}" size="30" redisplay="true" tabindex="3"/></td></tr>
+<tr><td><h1>Company Code:</h1></td><td><apex:inputText value="{!CompCode}" size="30" tabindex="4"/></td></tr>
+<tr/><tr/>
+<tr><td><apex:commandButton action="{!TaxPing}" value="Test Connect" tabindex="5"/></td><td>{!Version}</td></tr>
+</apex:form>
+</table>
+<hr />
+<table border="0" width="100%" cellpadding="5">
+<col width="5%"/><col width="10%"/><col width="5%"/><col width="20%"/>
+<col width="5%"/><col width="10%"/><col width="5%"/><col width="20%"/>
+<tr><th><h1>&nbsp;&nbsp;Origin Address</h1></th><th/><th/><th/><th><h1>Destination Address</h1></th><th/><th/><th/></tr>
+<apex:form >
+<tr>
+<td><h1>Line 1:</h1></td><td><apex:inputText value="{!orgAddr.Line1}" size="30" tabindex="10"/><td/><td/></td>
+<td><h1>Line 1:</h1></td><td><apex:inputText value="{!dstAddr.Line1}" size="30" tabindex="20"/><td/><td/></td>
+</tr>
+<tr>
+<td><h1>Line 2:</h1></td><td><apex:inputText value="{!orgAddr.Line2}" size="30" tabindex="11"/><td/><td/></td>
+<td><h1>Line 2:</h1></td><td><apex:inputText value="{!dstAddr.Line2}" size="30" tabindex="21"/><td/><td/></td>
+</tr>
+<tr>
+<td><h1>Line 3:</h1></td><td><apex:inputText value="{!orgAddr.Line3}" size="30" tabindex="12"/><td/><td/></td>
+<td><h1>Line 3:</h1></td><td><apex:inputText value="{!dstAddr.Line3}" size="30" tabindex="22"/><td/><td/></td>
+</tr>
+<tr>
+<td><h1>City, State, Zip:</h1></td>
+<td><apex:inputText value="{!orgAddr.City}" size="30" tabindex="13"/></td>
+<td><apex:inputText value="{!orgAddr.Region}" size="2" tabindex="14"/></td>
+<td><apex:inputText value="{!orgAddr.PostalCode}" size="10" tabindex="15"/></td>
+<td><h1>City, State, Zip:</h1></td>
+<td><apex:inputText value="{!dstAddr.City}" size="30" tabindex="23"/></td>
+<td><apex:inputText value="{!dstAddr.Region}" size="2" tabindex="24"/></td>
+<td><apex:inputText value="{!dstAddr.PostalCode}" size="10" tabindex="25"/></td>
+</tr>
+<tr><td/><td>{!OrgValidateResult}</td><td/><td/><td/><td>{!DstValidateResult}</td><td/><td/></tr>
+<tr>
+<td/><td><apex:commandButton action="{!oValidate}" value="Validate Origin" tabindex="16"/></td><td/><td/>
+<td/><td><apex:commandButton action="{!dValidate}" value="Validate Destination" tabindex="26"/></td><td/><td/>
+</tr>
+</apex:form>
+</table>
+<hr/>
+<table border="0" width="100%" cellpadding="5">
+<col width="5%"/><col width="20%"/><col width="30%"/><col width="5%"/>
+<col width="10%"/><col width="15%"/><col width="15%"/>
+<apex:form >
+<tr>
+<th>Line #</th>
+<th>Item Code / SKU</th>
+<th>Item Description</th>
+<th>Quantity</th>
+<th>Unit Cost</th>
+<th>Line Amount</th>
+<th>Line Tax Amount</th>
+</tr>
+<tr>
+<td><apex:inputText value="{!LineNo1}" size="3" tabindex="50"/></td>
+<td><apex:inputText value="{!ItemCode1}" size="20" tabindex="51"/></td>
+<td><apex:inputText value="{!ItemDesc1}" size="30" tabindex="52"/></td>
+<td><apex:inputText value="{!Qty1}" size="4" tabindex="53"/></td>
+<td><apex:inputText value="{!UnitCost1}" size="15" tabindex="54"/></td>
+<td><apex:inputText value="{!Amount1}" size="15" tabindex="55"/></td>
+<td>{!Tax1}</td>
+</tr>
+</apex:form>
+</table>
+<table border="0" width="100%" cellpadding="5">
+<col width="100%"/>
+<apex:form >
+<tr>
+<td>{!TaxBreakDown}</td>
+</tr>
+<hr/>
+<tr>
+<td><apex:commandButton action="{!CalcTax}" value="Calculate Sales Tax" tabindex="66"/></td>
+</tr>
+</apex:form>
+</table>
+</font>
+</body>
+</html>
+</apex:page>
