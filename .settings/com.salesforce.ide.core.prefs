@@ -7,7 +7,5 @@ httpsProtocol=true
 ideVersion=25.0
 keependpoint=false
 metadataFormatVersion=25.0
-namespacePrefix=
 packageName=unpackaged
 readTimeout=400
-username=avadev@ApexSDK.com
