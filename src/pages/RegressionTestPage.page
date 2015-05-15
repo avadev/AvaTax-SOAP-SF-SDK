@@ -1,0 +1,49 @@
+<apex:page controller="RegressionTestController">
+<html>
+<body>
+<font face="arial">
+<apex:form >
+<table border="0" width="100%" cellpadding="5"><col width="5%"/><col width="95%"/>
+<tr>
+    <th><h1>Credentials</h1>
+    </th>
+</tr>
+
+<tr>
+    <td><h1>Service URL:</h1></td>
+    <td><apex:inputText value="{!SvcURL}" size="30" tabindex="1"/></td>
+</tr>
+<tr>
+    <td><h1>UserName:</h1></td>
+    <td><apex:inputText value="{!UserName}" size="30" tabindex="2"/></td>
+</tr>
+<tr>
+    <td><h1>Password:</h1></td>
+    <td><apex:inputSecret value="{!PassWord}" size="30" redisplay="true" tabindex="3"/></td>
+</tr>
+<tr>
+    <td><h1>Company Code:</h1></td>
+    <td><apex:inputText value="{!CompCode}" size="30" tabindex="4"/></td>
+</tr>
+<tr/><tr/>
+<tr>
+    <td><apex:commandButton action="{!RunTests}" value="Run Tests" tabindex="5"/></td>
+    <td/>
+</tr>
+</table>
+<table border="0" width="100%" cellpadding="5"><col width="95%"/>
+<tr>
+	<td><h1>Test Results:</h1></td>
+</tr>
+<tr>
+    <td><h1>AddressSvc=&gt;</h1>&nbsp;<apex:outputText value="{!AOutput}"/></td>
+</tr>
+<tr>
+    <td><h1>TaxSvc=&gt;</h1>&nbsp;<apex:outputText value="{!TOutput}"/></td>
+</tr>
+</table>
+</apex:form>
+</font>
+</body>
+</html>
+</apex:page>
