@@ -5,6 +5,7 @@ public class RegressionTestController
     public String UserName {get;set;}
     public String PassWord {get;set;}
     public String CompCode {get;set;}
+    //public String BINum {get;set;}
     public String AddrCount {get; set;}
     public String AddrFailList {get; set;}
     public String AOutput {get; set;}
@@ -16,8 +17,8 @@ public class RegressionTestController
 
     public PageReference RunTests()
     {
-    	AOutput='';
-    	TOutput='';
+        AOutput='';
+        TOutput='';
         AddressSvc.AddressSvcSoap addressSvc = new AddressSvc.AddressSvcSoap(SvcURL);
         addressSvc.Security.UsernameToken.Username = UserName;
         addressSvc.Security.UsernameToken.Password = PassWord;
@@ -31,7 +32,7 @@ public class RegressionTestController
         taxSvc.Profile = new TaxSvc.Profile();
         taxSvc.Profile.Client = 'SFDemo,1,0';
 
-		//AdjustTaxResult
+        //AdjustTaxResult
         TaxSvc.GetTaxRequest gtr = new TaxSvc.GetTaxRequest();
         TaxSvc.AdjustTaxRequest adjres = new TaxSvc.AdjustTaxRequest();
         adjres.AdjustmentReason = 4;        
@@ -70,76 +71,79 @@ public class RegressionTestController
         }
         return null;  
   
-		
+        
 // AddressSvcSoap: Ping, IsAuthorized, Validate
         AOutput += AddressSvcPing(addressSvc);
         AOutput += '; ' + AddressSvcIsAuthorized(addressSvc);
         AOutput += '; ' + AddressSvcValidate(addressSvc);
 // TaxSvc.Ping
-		TOutput += TaxPing(taxSvc);
-		TOutput += '; ' + TaxIsAuthorized(taxSvc);
-		TOutput += '; ' + TaxGetTax(taxSvc, CompCode);
-		return null;
+        TOutput += TaxPing(taxSvc);
+        TOutput += '; ' + TaxIsAuthorized(taxSvc);
+        TOutput += '; ' + TaxGetTax(taxSvc, CompCode);
+        return null;
     }
 
     public string TaxGetTax(TaxSvc.TaxSvcSoap taxsvc, string company)
     {
-    	string rVal = 'GetTax:';
-    	
-    	TaxSvc.GetTaxRequest gtr = new TaxSvc.GetTaxRequest();
-    	gtr.Addresses = new TaxSvc.ArrayOfBaseAddress();
-    	gtr.Addresses.BaseAddress = new List<TaxSvc.BaseAddress>();
-    	TaxSvc.BaseAddress oraddr = new taxSvc.BaseAddress();
-    	oraddr.Line1 = '1060 W Addison St';
-    	oraddr.City = 'Chicago';
-    	oraddr.Region = 'IL';
-    	oraddr.PostalCode = '60613-4566';
-    	oraddr.AddressCode = 'Origin';
-    	gtr.Addresses.BaseAddress.add(oraddr);
-    	
-    	TaxSvc.BaseAddress dstaddr = new taxSvc.BaseAddress();
-    	dstaddr.Line1 = '300 E Chapman Ave';
-    	dstaddr.City = 'Orange';
-    	dstaddr.Region = 'CA';
-    	dstaddr.PostalCode = '92866-1508';
-    	dstaddr.AddressCode = 'Destination';
-    	gtr.Addresses.BaseAddress.add(dstaddr);
-    	gtr.OriginCode = oraddr.AddressCode;
-    	gtr.DestinationCode = dstaddr.AddressCode;
-    	gtr.CompanyCode = company;
-    	gtr.CustomerCode = 'TestCustomer';
-    	gtr.DetailLevel = 'Document';
-    	gtr.DocCode = 'TestDoc';
-    	gtr.DocType = 'SalesOrder';
-    	gtr.DocDate = DateTime.now().date();
-    	gtr.Lines = new TaxSvc.ArrayOfLine();
-    	gtr.Lines.Line = new List<TaxSvc.Line>();
-    	
-    	TaxSvc.Line litem = new TaxSvc.Line();
-    	litem.Amount = 100.0;
-    	litem.Description = 'Test Product Description';
-    	litem.ItemCode = 'Test Product SKU';
-    	litem.No = '1';
-    	litem.Qty = 1.0;
-    	gtr.Lines.Line.add(litem);
-    	
-    	TaxSvc.GetTaxResult gtres = null;
-    	try
-    	{
-    		gtres = taxsvc.GetTax(gtr);
-    		rVal += gtres.ResultCode;
-    	}
-    	catch(Exception ex)
-    	{
-    		rVal += 'Excepted';
-    	}
-    	
-    	return rVal;
+        string rVal = 'GetTax:';
+        
+        TaxSvc.GetTaxRequest gtr = new TaxSvc.GetTaxRequest();
+        gtr.Addresses = new TaxSvc.ArrayOfBaseAddress();
+        gtr.Addresses.BaseAddress = new List<TaxSvc.BaseAddress>();
+        TaxSvc.BaseAddress oraddr = new taxSvc.BaseAddress();
+       // oraddr.Line1 = '1060 W Addison St';
+       // oraddr.City = 'Chicago';
+       // oraddr.Region = 'IL';
+        oraddr.Country = 'GB';
+       // oraddr.PostalCode = '60613-4566';
+        oraddr.AddressCode = 'Origin';
+        gtr.Addresses.BaseAddress.add(oraddr);
+        
+        TaxSvc.BaseAddress dstaddr = new taxSvc.BaseAddress();
+        //dstaddr.Line1 = '300 E Chapman Ave';
+        //dstaddr.City = 'Orange';
+        //dstaddr.Region = 'CA';
+        dstaddr.Country = 'DE';
+       // dstaddr.PostalCode = '92866-1508';
+       // dstaddr.AddressCode = 'Destination';
+        gtr.Addresses.BaseAddress.add(dstaddr);
+        gtr.OriginCode = oraddr.AddressCode;
+        gtr.BusinessIdentificationNo = 'VAT123';
+        gtr.DestinationCode = dstaddr.AddressCode;
+        gtr.CompanyCode = 'ITS';
+        gtr.CustomerCode = 'TestCustomer';
+        gtr.DetailLevel = 'Document';
+        gtr.DocCode = '123123';
+        gtr.DocType = 'SalesInvoice';
+        gtr.DocDate = DateTime.now().date();
+        gtr.Lines = new TaxSvc.ArrayOfLine();
+        gtr.Lines.Line = new List<TaxSvc.Line>();
+        
+        TaxSvc.Line litem = new TaxSvc.Line();
+        litem.Amount = 100.0;
+        litem.Description = 'Test Product Description';
+        litem.ItemCode = 'Test Product SKU';
+        litem.No = '1';
+        litem.Qty = 1.0;
+        gtr.Lines.Line.add(litem);
+        
+        TaxSvc.GetTaxResult gtres = null;
+        try
+        {
+            gtres = taxsvc.GetTax(gtr);
+            rVal += gtres.ResultCode;
+        }
+        catch(Exception ex)
+        {
+            rVal += 'Excepted';
+        }
+        
+        return rVal;
     }
 
     public string TaxIsAuthorized(TaxSvc.TaxSvcSoap taxsvc)
     {
-    	string rVal = 'IsAuthorized:';
+        string rVal = 'IsAuthorized:';
         TaxSvc.IsAuthorizedResult iares = null;
         try 
         {
@@ -148,35 +152,35 @@ public class RegressionTestController
         }
         catch(Exception ex)
         {
-        	rVal += 'Excepted';
+            rVal += 'Excepted';
         }
         return rVal;
      }
 
     public string AddressSvcValidate(AddressSvc.AddressSvcSoap addressSvc)
     {
-    	string rVal = 'Validate:';
-    	AddressSvc.ValidateRequest vreq = new AddressSvc.ValidateRequest();
-    	vreq.Address = new AddressSvc.BaseAddress();
-    	vreq.Address.Line1 = '1060 w addison';
-    	vreq.Address.City = 'chicago';
-    	vreq.Address.Region = 'il';
-    	AddressSvc.ValidateResult vres = null;
-    	try
-    	{
-    		vres = addressSvc.Validate(vreq);
-    		rVal += vres.ResultCode;
-    	}
-    	catch(Exception ex)
-    	{
-    		rVal += 'Excepted';
-    	}
-    	return rVal;
+        string rVal = 'Validate:';
+        AddressSvc.ValidateRequest vreq = new AddressSvc.ValidateRequest();
+        vreq.Address = new AddressSvc.BaseAddress();
+        vreq.Address.Line1 = '1060 w addison';
+        vreq.Address.City = 'chicago';
+        vreq.Address.Region = 'il';
+        AddressSvc.ValidateResult vres = null;
+        try
+        {
+            vres = addressSvc.Validate(vreq);
+            rVal += vres.ResultCode;
+        }
+        catch(Exception ex)
+        {
+            rVal += 'Excepted';
+        }
+        return rVal;
     }
 
     public string AddressSvcIsAuthorized(AddressSvc.AddressSvcSoap addressSvc)
     {
-    	string rVal = 'IsAuthorized:';
+        string rVal = 'IsAuthorized:';
         AddressSvc.IsAuthorizedResult iares = null;
         try 
         {
@@ -185,14 +189,14 @@ public class RegressionTestController
         }
         catch(Exception ex)
         {
-        	rVal += 'Excepted';
+            rVal += 'Excepted';
         }
         return rVal;
      }
 
     public string AddressSvcPing(AddressSvc.AddressSvcSoap addressSvc)
     {
-    	string rVal = 'Ping:';
+        string rVal = 'Ping:';
         AddressSvc.PingResult pres = null;
         try 
         {
@@ -201,7 +205,7 @@ public class RegressionTestController
         }
         catch(Exception ex)
         {
-        	rVal += 'Excepted';
+            rVal += 'Excepted';
         }
         return rVal + ' ';
     }
@@ -218,7 +222,7 @@ public class RegressionTestController
         }
         catch(Exception ex)
         {
-        	rVal += 'Excepted';
+            rVal += 'Excepted';
         }
         return rVal;
     }

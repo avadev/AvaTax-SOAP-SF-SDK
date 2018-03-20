@@ -19,37 +19,18 @@
 // of a namespace than a class.
 ////////////////////////////////////////////////////////////////////////////////
 global with sharing class AddressSvc {
+
 // unit tests just instantiate an instance of every class
 // in order to satisfy SF's code coverage requirement - no comment
-   static testmethod void AddressUnitTests()
-   {
-        AddressSvc m_AddrSvc = new AddressSvc();
-        AddressSvcSoap m_addrSvcSoap = new AddressSvcSoap('https://development.avalara.net');
-        PingResult m_tstPres = new PingResult();
-        IsAuthorizedResult m_tias = new IsAuthorizedResult();
-        IsAuthorizedResponse_element m_tiare = new IsAuthorizedResponse_element();
-        Message m_tmsg = new Message();
-        ArrayOfValidAddress m_tarrva = new ArrayOfValidAddress();
-        ValidateRequest m_tvr = new ValidateRequest();
-        Profile m_tpr = new Profile();
-        PingResponse_element m_tpre = new PingResponse_element(); 
-        ValidateResponse_element m_tvre = new ValidateResponse_element();
-        Ping_element m_tpe = new Ping_element();
-        IsAuthorized_element m_tiae = new IsAuthorized_element();
-        BaseAddress m_tba = new BaseAddress();
-        ArrayOfMessage m_taom = new ArrayOfMessage();
-        Security m_tsec = new Security();
-        Validate_element m_tve = new Validate_element();
-        ValidAddress m_tva = new ValidAddress();
-        UsernameToken_element m_tute = new UsernameToken_element();
-        ValidateResult m_tvRes = new ValidateResult();
-    }
+   //static testmethod void AddressUnitTests()
+   //Commented below test class method & written in a separate class - For release 13.65.3.0
 
 ////////////////////////////////////////////////////////////////////////////////
 // AddressSvcSoap is the mother class.  All APIs of the AddressSvc "namespace"
 // are methods of AddressSvcSoap.
 ////////////////////////////////////////////////////////////////////////////////
     global class AddressSvcSoap {
+
         global String endpoint_x;
         global Map<String,String> inputHttpHeaders_x;
         global Map<String,String> outputHttpHeaders_x;
@@ -225,9 +206,9 @@ global with sharing class AddressSvc {
         private String[] field_order_type_info = new String[]{'ValidAddress'};
     }
     global class Profile {
-        global String Name = 'Apex2AvalaraSDK.11.2.1.0';
+        global String Name = 'Apex2AvalaraSDK.13.67.0.0';
         global String Client;
-        global String Adapter = 'Apex2AvalaraSDK.11.2.1.0';
+        global String Adapter = 'Apex2AvalaraSDK.13.67.0.0';
         global String Machine = 'SFCloud';
         private String[] Name_type_info = new String[]{'Name','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
         private String[] Client_type_info = new String[]{'Client','http://www.w3.org/2001/XMLSchema','string','0','1','false'};

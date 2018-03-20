@@ -1,11 +1,15 @@
-#Thu Mar 14 11:39:57 PDT 2013
 eclipse.preferences.version=1
-endpointApiVersion=25.0
+endpointApiVersion=38.0
 endpointEnvironment=Production/Developer Edition
-endpointServer=www.salesforce.com
+endpointServer=login.salesforce.com
 httpsProtocol=true
-ideVersion=25.0
+ideVersion=38.0
 keependpoint=false
-metadataFormatVersion=25.0
+metadataFormatVersion=38.0
+namespacePrefix=AVA_SF_SDK
 packageName=unpackaged
+preferToolingDeployment=true
+projectIdentifier=IDE6703541103698462027
 readTimeout=400
+sessionId=
+username=bhavesh@sflisting.org
