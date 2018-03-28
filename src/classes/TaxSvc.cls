@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-//   Copyright 2012 Avalara, Inc.
+//   Copyright 2017 Avalara, Inc.
 //
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -18,73 +18,21 @@
 // TaxSvc is not instantiated directly, and is really in effect more 
 // of a namespace than a class.
 ////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
+//Modified by Vijay to support below functionalities
+//Added Support for https://avatax.avalara.net/Tax/TaxSvcAltSecv2.wsdl 
+//Added parameters for ParameterBagItems
+////////////////////////////////////////////////////////////////////////////////
+
+
 global with sharing class TaxSvc {
 // unit tests just instantiate an instance of every class
 // in order to satisfy SF's code coverage requirement - no comment
-    static testmethod void TaxUnitTests()
-    {
-        TaxSvc m_tTaxSvc = new TaxSvc();
-        AuditMessage m_tAuditMessage = new AuditMessage();
-        CommitTaxResult m_tCommitTaxResult = new CommitTaxResult();
-        TaxSvcSoap m_tTaxSvcSoap = new TaxSvcSoap('https://bogus.url.net');
-        IsAuthorized_element m_tIsAuthorized_element = new IsAuthorized_element();
-        TaxAddress m_tTaxAddress = new TaxAddress();
-        ArrayOfMessage m_tArrayOfMessage = new ArrayOfMessage();
-        ArrayOfLine m_tArrayOfLine = new ArrayOfLine();
-        ApplyPaymentResponse_element m_tApplyPaymentResponse_element = new ApplyPaymentResponse_element();
-        GetTaxHistoryResult m_tGetTaxHistoryResult = new GetTaxHistoryResult();
-        ArrayOfBaseAddress m_tArrayOfBaseAddress = new ArrayOfBaseAddress();
-        PostTax_element m_tPostTax_element = new PostTax_element();
-        PostTaxRequest m_tPostTaxRequest = new PostTaxRequest();
-        AdjustTaxRequest m_tAdjustTaxRequest = new AdjustTaxRequest();
-        ArrayOfTaxLine m_tArrayOfTaxLine = new ArrayOfTaxLine();
-        ApplyPaymentRequest m_tApplyPaymentRequest = new ApplyPaymentRequest();
-        PingResult m_tPingResult = new PingResult();
-        IsAuthorizedResult m_tIsAuthorizedResult = new IsAuthorizedResult();
-        IsAuthorizedResponse_element m_tIsAuthorizedResponse_element = new IsAuthorizedResponse_element();
-        CommitTaxRequest m_tCommitTaxRequest = new CommitTaxRequest();
-        TaxOverride m_tTaxOverride = new TaxOverride();
-        Profile m_tProfile = new Profile();
-        ReconcileTaxHistoryRequest m_tReconcileTaxHistoryRequest = new ReconcileTaxHistoryRequest();
-        ApplyPaymentResult m_tApplyPaymentResult = new ApplyPaymentResult();
-        BaseAddress m_tBaseAddress = new BaseAddress();
-        ArrayOfTaxDetail m_tArrayOfTaxDetail = new ArrayOfTaxDetail();
-        Security m_tSecurity = new Security();
-        GetTaxHistoryResponse_element m_tGetTaxHistoryResponse_element = new GetTaxHistoryResponse_element();
-        GetTax_element m_tGetTax_element = new GetTax_element();
-        UsernameToken_element m_tUsernameToken_element = new UsernameToken_element();
-        AdjustTaxResult m_tAdjustTaxResult = new AdjustTaxResult();
-        GetTaxResult m_tGetTaxResult = new GetTaxResult();
-        CommitTax_element m_tCommitTax_element = new CommitTax_element();
-        ReconcileTaxHistoryResult m_tReconcileTaxHistoryResult = new ReconcileTaxHistoryResult();
-        AdjustTax_element m_tAdjustTax_element = new AdjustTax_element();
-        AdjustTaxResponse_element m_tAdjustTaxResponse_element = new AdjustTaxResponse_element();
-        Ping_element m_tPing_element = new Ping_element();
-        GetTaxHistory_element m_tGetTaxHistory_element = new GetTaxHistory_element();
-        ArrayOfTaxAddress m_tArrayOfTaxAddress = new ArrayOfTaxAddress();
-        PostTaxResponse_element m_tPostTaxResponse_element = new PostTaxResponse_element();
-        GetTaxRequest m_tGetTaxRequest = new GetTaxRequest();
-        CancelTax_element m_tCancelTax_element = new CancelTax_element();
-        CommitTaxResponse_element m_tCommitTaxResponse_element = new CommitTaxResponse_element();
-        PostTaxResult m_tPostTaxResult = new PostTaxResult();
-        ReconcileTaxHistoryResponse_element m_tReconcileTaxHistoryResponse_element = new ReconcileTaxHistoryResponse_element();
-        CancelTaxResult m_tCancelTaxResult = new CancelTaxResult();
-        TaxDetail m_tTaxDetail = new TaxDetail();
-        Message m_tMessage = new Message();
-        PingResponse_element m_tPingResponse_element = new PingResponse_element();
-        GetTaxHistoryRequest m_tGetTaxHistoryRequest = new GetTaxHistoryRequest();
-        ApplyPayment_element m_tApplyPayment_element = new ApplyPayment_element();
-        CancelTaxRequest m_tCancelTaxRequest = new CancelTaxRequest();
-        ReconcileTaxHistory_element m_tReconcileTaxHistory_element = new ReconcileTaxHistory_element();
-        GetTaxResponse_element m_tGetTaxResponse_element = new GetTaxResponse_element();
-        CancelTaxResponse_element m_tCancelTaxResponse_element = new CancelTaxResponse_element();
-        TaxLine m_tTaxLine = new TaxLine();
-        ArrayOfGetTaxResult m_tArrayOfGetTaxResult = new ArrayOfGetTaxResult();
-        Line m_tLine = new Line();
-    }
-
+//Removed below method & added in a separate class by Vijay on 28 Nov 2017. To update API version of class - For release 13.65.3.0
     global class TaxSvcSoap {
-        global String endpoint_x = 'https://development.avalara.net/tax/Tax/TaxSvc.asmx/altsec';
+
+        global String endpoint_x = 'https://development.avalara.net/tax/Tax/TaxSvc.asmx/altsec/v2';
         global Map<String,String> inputHttpHeaders_x;
         global Map<String,String> outputHttpHeaders_x;
         global String clientCertName_x;
@@ -100,7 +48,7 @@ global with sharing class TaxSvc {
         private String[] ns_map_type_info = new String[]{'http://avatax.avalara.com/services', 'CBTaxSvc'};
         global TaxSvcSoap(String SvcURL)
         {
-            endpoint_x = SvcURL + '/tax/taxsvc.asmx/altsec';
+            endpoint_x = SvcURL + '/tax/taxsvc.asmx/altsec/v2';
             Profile = new TaxSvc.Profile();
             Security = new TaxSvc.Security();
         }
@@ -230,6 +178,50 @@ global with sharing class TaxSvc {
             response_x = response_map_x.get('response_x');
             return response_x.ApplyPaymentResult;
         }
+        global TaxSvc.GetParameterBagItemsResult GetParameterBagItems(TaxSvc.GetParameterBagItemsRequest GetParameterBagItemsRequest) {
+            TaxSvc.GetParameterBagItems_element request_x = new TaxSvc.GetParameterBagItems_element();
+            TaxSvc.GetParameterBagItemsResponse_element response_x;
+            request_x.GetParameterBagItemsRequest = GetParameterBagItemsRequest;
+            Map<String, TaxSvc.GetParameterBagItemsResponse_element> response_map_x = new Map<String, TaxSvc.GetParameterBagItemsResponse_element>();
+            response_map_x.put('response_x', response_x);
+            WebServiceCallout.invoke(
+              this,
+              request_x,
+              response_map_x,
+              new String[]{endpoint_x,
+              'http://avatax.avalara.com/services/GetParameterBagItems',
+              'http://avatax.avalara.com/services',
+              'GetParameterBagItems',
+              'http://avatax.avalara.com/services',
+              'GetParameterBagItemsResponse',
+              'TaxSvc.GetParameterBagItemsResponse_element'}
+            );
+            response_x = response_map_x.get('response_x');
+            return response_x.GetParameterBagItemsResult;
+        }
+        
+        global TaxSvc.GetAllParameterBagItemsResult GetAllParameterBagItems() {
+            //TaxSvc.GetAllParameterBagItems_element request_x = new TaxSvc.GetAllParameterBagItems_element();
+            TaxSvc.GetAllParameterBagItemsResponse_element response_x;
+            
+            Map<String, TaxSvc.GetAllParameterBagItemsResponse_element> response_map_x = new Map<String, TaxSvc.GetAllParameterBagItemsResponse_element>();
+            response_map_x.put('response_x', response_x);
+            WebServiceCallout.invoke(
+              this,
+              null,
+              response_map_x,
+              new String[]{endpoint_x,
+              'http://avatax.avalara.com/services/GetAllParameterBagItems',
+              'http://avatax.avalara.com/services',
+              'GetAllParameterBagItems',
+              'http://avatax.avalara.com/services',
+              'GetAllParameterBagItemsResponse',
+              'TaxSvc.GetAllParameterBagItemsResponse_element'}
+            );
+            response_x = response_map_x.get('response_x');
+            return response_x.GetAllParameterBagItemsResult;
+        }
+
         global TaxSvc.GetTaxResult GetTax(TaxSvc.GetTaxRequest GetTaxRequest) {
             TaxSvc.GetTax_element request_x = new TaxSvc.GetTax_element();
             TaxSvc.GetTaxResponse_element response_x;
@@ -363,6 +355,16 @@ global with sharing class TaxSvc {
         private String[] apex_schema_type_info = new String[]{'http://avatax.avalara.com/services','true','false'};
         private String[] field_order_type_info = new String[]{'CompanyCode','DocType','DocCode','PaymentDate'};
     }
+    global class GetParameterBagItemsRequest {
+        global String Category;
+        global String Country;
+        global String State;
+        private String[] Category_type_info = new String[]{'Category','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
+        private String[] Country_type_info = new String[]{'Country','http://avatax.avalara.com/services','DocumentType','1','1','false'};
+        private String[] State_type_info = new String[]{'State','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
+        private String[] apex_schema_type_info = new String[]{'http://avatax.avalara.com/services','true','false'};
+        private String[] field_order_type_info = new String[]{'Category','Country','State'};
+    }
     global class CommitTaxRequest {
         global String CompanyCode;
         global String DocType = 'SalesOrder';
@@ -407,12 +409,16 @@ global with sharing class TaxSvc {
         global String PurchaseOrderNo;
         global String ExemptionNo;
         global String OriginCode;
+        global String BusinessIdentificationNo;
+        public Boolean IsSellerImporterOfRecord;    //Added by Vijay on 15 Jan 2018 for CALC 17.12 release - SDK version 13.65.4.0
+        global String PosLaneCode;        //Added PosLaneCode by Vijay on 02 Aug 2017
         global String DestinationCode;
         global TaxSvc.ArrayOfBaseAddress Addresses;
         global TaxSvc.ArrayOfLine Lines;
         global String DetailLevel = 'Document';
         global String ReferenceCode;
         global String LocationCode;
+        global String Description;
         global Boolean Commit_x = false;
         global String BatchCode;
         global TaxSvc.TaxOverride TaxOverride;
@@ -422,6 +428,8 @@ global with sharing class TaxSvc {
         global Decimal ExchangeRate = 1.0;
         global Date ExchangeRateEffDate = Date.Today();
         global Integer HashCode;
+        global TaxSvc.ArrayOfParameterBagItem ParameterBagItems;
+
         private String[] HashCode_type_info = new String[]{'HashCode','http://www.w3.org/2001/XMLSchema','int','1','1','false'};
         private String[] CompanyCode_type_info = new String[]{'CompanyCode','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
         private String[] DocType_type_info = new String[]{'DocType','http://avatax.avalara.com/services','DocumentType','1','1','false'};
@@ -434,6 +442,9 @@ global with sharing class TaxSvc {
         private String[] PurchaseOrderNo_type_info = new String[]{'PurchaseOrderNo','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
         private String[] ExemptionNo_type_info = new String[]{'ExemptionNo','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
         private String[] OriginCode_type_info = new String[]{'OriginCode','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
+        private String[] BusinessIdentificationNo_type_info = new String[]{'BusinessIdentificationNo','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
+        private String[] IsSellerImporterOfRecord_type_info = new String[]{'IsSellerImporterOfRecord','http://www.w3.org/2001/XMLSchema','boolean','0','1','false'};
+        private String[] PosLaneCode_type_info = new String[]{'PosLaneCode','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
         private String[] DestinationCode_type_info = new String[]{'DestinationCode','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
         private String[] Addresses_type_info = new String[]{'Addresses','http://avatax.avalara.com/services','ArrayOfBaseAddress','0','1','false'};
         private String[] Lines_type_info = new String[]{'Lines','http://avatax.avalara.com/services','ArrayOfLine','0','1','false'};
@@ -448,9 +459,12 @@ global with sharing class TaxSvc {
         private String[] PaymentDate_type_info = new String[]{'PaymentDate','http://www.w3.org/2001/XMLSchema','date','1','1','false'};
         private String[] ExchangeRate_type_info = new String[]{'ExchangeRate','http://www.w3.org/2001/XMLSchema','decimal','1','1','false'};
         private String[] ExchangeRateEffDate_type_info = new String[]{'ExchangeRateEffDate','http://www.w3.org/2001/XMLSchema','date','1','1','false'};
+        private String[] Description_type_info = new String[]{'Description','http://www.w3.org/2001/XMLSchema','date','1','1','false'};
+        private String[] ParameterBagItems_type_info = new String[]{'ParameterBagItems','http://avatax.avalara.com/services','ArrayOfParameterBagItem','0','1','false'};
         private String[] apex_schema_type_info = new String[]{'http://avatax.avalara.com/services','true','false'};
-        private String[] field_order_type_info = new String[]{'CompanyCode','DocType','DocCode','DocDate','SalespersonCode','CustomerCode','CustomerUsageType','Discount','PurchaseOrderNo','ExemptionNo','OriginCode','DestinationCode','Addresses','Lines','DetailLevel','ReferenceCode','LocationCode','Commit_x','BatchCode','TaxOverride','CurrencyCode','ServiceMode','PaymentDate','ExchangeRate','ExchangeRateEffDate'};
+        private String[] field_order_type_info = new String[]{'CompanyCode','DocType','DocCode','DocDate','SalespersonCode','CustomerCode','CustomerUsageType','Discount','PurchaseOrderNo','ExemptionNo','OriginCode','BusinessIdentificationNo','IsSellerImporterOfRecord','PosLaneCode','DestinationCode','Addresses','Lines','DetailLevel','ReferenceCode','LocationCode','Commit_x','BatchCode','TaxOverride','CurrencyCode','ServiceMode','PaymentDate','ExchangeRate','ExchangeRateEffDate','Description','ParameterBagItems'};
     }
+
     global class GetTaxHistoryRequest {
         global String CompanyCode;
         global String DocType = 'SalesOrder';
@@ -475,9 +489,10 @@ global with sharing class TaxSvc {
         private String[] apex_schema_type_info = new String[]{'http://avatax.avalara.com/services','true','false'};
         private String[] field_order_type_info = new String[]{'CompanyCode','DocType','DocCode','CancelCode'};
     }
-////////////////////////////////////////////////////////////////////////////////
-// API call Result Classes - API calls return instantiations of these
-////////////////////////////////////////////////////////////////////////////////
+    
+    ////////////////////////////////////////////////////////////////////////////////
+    // API call Result Classes - API calls return instantiations of these
+    ////////////////////////////////////////////////////////////////////////////////
     global class CommitTaxResult {
         global String DocId;
         global String TransactionId;
@@ -534,6 +549,19 @@ global with sharing class TaxSvc {
         private String[] apex_schema_type_info = new String[]{'http://avatax.avalara.com/services','true','false'};
         private String[] field_order_type_info = new String[]{};
     }
+    global class GetParameterBagItemsResult {
+        global TaxSvc.ArrayOfParameterBag ParameterBags;
+        private String[] ParameterBags_type_info = new String[]{'ParameterBags','http://avatax.avalara.com/services','ArrayOfParameterBag','0','1','false'};
+        private String[] apex_schema_type_info = new String[]{'http://avatax.avalara.com/services','true','false'};
+        private String[] field_order_type_info = new String[]{'ParameterBags'};
+    }
+    global class GetAllParameterBagItemsResult {
+        global TaxSvc.ArrayOfParameterBag ParameterBags;
+        private String[] ParameterBags_type_info = new String[]{'ParameterBags','http://avatax.avalara.com/services','ArrayOfParameterBag','0','1','false'};
+        private String[] apex_schema_type_info = new String[]{'http://avatax.avalara.com/services','true','false'};
+        private String[] field_order_type_info = new String[]{'ParameterBags'};
+    }
+
     global class AdjustTaxResult {
         global String DocId;
         global Integer HashCode;
@@ -596,7 +624,7 @@ global with sharing class TaxSvc {
     global class GetTaxResult {
         global String DocId;
         global String TransactionId;
-        global String ResultCode;
+        global String ResultCode = 'Success';
         global TaxSvc.ArrayOfMessage Messages;
         global String DocType = 'SalesOrder';
         global String DocCode;
@@ -620,6 +648,9 @@ global with sharing class TaxSvc {
         global Date TaxDate = Date.Today();
         global TaxSvc.ArrayOfTaxDetail TaxSummary;
         global Boolean VolatileTaxRates = false;
+        global String Description;
+        global String VATNumberType;
+
         private String[] DocId_type_info = new String[]{'DocId','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
         private String[] TransactionId_type_info = new String[]{'TransactionId','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
         private String[] ResultCode_type_info = new String[]{'ResultCode','http://avatax.avalara.com/services','SeverityLevel','1','1','false'};
@@ -646,8 +677,10 @@ global with sharing class TaxSvc {
         private String[] TaxDate_type_info = new String[]{'TaxDate','http://www.w3.org/2001/XMLSchema','date','1','1','false'};
         private String[] TaxSummary_type_info = new String[]{'TaxSummary','http://avatax.avalara.com/services','ArrayOfTaxDetail','0','1','false'};
         private String[] VolatileTaxRates_type_info = new String[]{'VolatileTaxRates','http://www.w3.org/2001/XMLSchema','boolean','0','1','false'};
+        private String[] Description_type_info = new String[]{'Description','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
+        private String[] VATNumberType_type_info = new String[]{'VATNumberType','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
         private String[] apex_schema_type_info = new String[]{'http://avatax.avalara.com/services','true','false'};
-        private String[] field_order_type_info = new String[]{'TransactionId','ResultCode','Messages','DocType','DocCode','DocDate','DocStatus','Reconciled','Timestamp','TotalAmount','TotalDiscount','TotalExemption','TotalTaxable','TotalTax','TotalTaxCalculated','TaxLines','TaxAddresses','Locked','AdjustmentReason','AdjustmentDescription','Version','TaxDate','TaxSummary'};
+        private String[] field_order_type_info = new String[]{'TransactionId','ResultCode','Messages','DocType','DocCode','DocDate','DocStatus','Reconciled','Timestamp','TotalAmount','TotalDiscount','TotalExemption','TotalTaxable','TotalTax','TotalTaxCalculated','TaxLines','TaxAddresses','Locked','AdjustmentReason','AdjustmentDescription','Version','TaxDate','TaxSummary','Description','VATNumberType'};
     }
     global class ReconcileTaxHistoryResult {
         global Integer RecordCount;
@@ -750,6 +783,19 @@ global with sharing class TaxSvc {
         private String[] apex_schema_type_info = new String[]{'http://avatax.avalara.com/services','true','false'};
         private String[] field_order_type_info = new String[]{'BaseAddress'};
     }
+    global class ArrayOfParameterBag {
+        global TaxSvc.ParameterBag[] ParameterBag;
+        private String[] ParameterBag_type_info = new String[]{'ParameterBag','http://avatax.avalara.com/services','ParameterBag','0','-1','true'};
+        private String[] apex_schema_type_info = new String[]{'http://avatax.avalara.com/services','true','false'};
+        private String[] field_order_type_info = new String[]{'ParameterBag'};
+    }
+    global class ArrayOfParameterBagItem {
+        global TaxSvc.ParameterBagItem[] ParameterBagItem;
+        private String[] ParameterBagItem_type_info = new String[]{'ParameterBagItem','http://avatax.avalara.com/services','ParameterBagItem','0','-1','true'};
+        private String[] apex_schema_type_info = new String[]{'http://avatax.avalara.com/services','true','false'};
+        private String[] field_order_type_info = new String[]{'ParameterBagItem'};
+    }
+
     global class ArrayOfTaxLine {
         global TaxSvc.TaxLine[] TaxLine;
         private String[] TaxLine_type_info = new String[]{'TaxLine','http://avatax.avalara.com/services','TaxLine','0','-1','true'};
@@ -769,16 +815,19 @@ global with sharing class TaxSvc {
         private String[] field_order_type_info = new String[]{'TaxOverrideType','TaxAmount','TaxDate','Reason'};
     }
     global class Profile {
-        global String Name = 'Apex2AvalaraSDK.11.2.1.0';
+        global String Name = 'Apex2AvalaraSDK.13.67.0.0';
         global String Client;
-        global String Adapter = 'Apex2AvalaraSDK.11.2.1.0';
+        global String Adapter = 'Apex2AvalaraSDK.13.67.0.0';
         global String Machine = 'SFCloud';
+        global Boolean ClientSupportMultiTax = false;        //Added for SDK Release v13.67 to support multi-tax functionality
+
         private String[] Name_type_info = new String[]{'Name','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
         private String[] Client_type_info = new String[]{'Client','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
         private String[] Adapter_type_info = new String[]{'Adapter','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
         private String[] Machine_type_info = new String[]{'Machine','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
+        private String[] ClientSupportMultiTax_type_info = new String[]{'ClientSupportMultiTax','http://www.w3.org/2001/XMLSchema','boolean','0','1','false'};
         private String[] apex_schema_type_info = new String[]{'http://avatax.avalara.com/services','true','false'};
-        private String[] field_order_type_info = new String[]{'Name','Client','Adapter','Machine'};
+        private String[] field_order_type_info = new String[]{'Name','Client','Adapter','Machine','ClientSupportMultiTax'};
     }
     global class BaseAddress {
         global String AddressCode;
@@ -806,6 +855,37 @@ global with sharing class TaxSvc {
         private String[] apex_schema_type_info = new String[]{'http://avatax.avalara.com/services','true','false'};
         private String[] field_order_type_info = new String[]{'AddressCode','Line1','Line2','Line3','City','Region','PostalCode','Country','TaxRegionId'};
     }
+
+    global class ParameterBag {
+        global String ParameterBagId;
+        global String Category;
+        global String Name;
+        global String DataType;
+        global String Description;
+        global String Country;
+        global String State;
+        private String[] ParameterBagId_type_info = new String[]{'ParameterBagId','http://www.w3.org/2001/XMLSchema','string','1','1','false'};
+        private String[] Category_type_info = new String[]{'Category','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
+        private String[] Name_type_info = new String[]{'Name','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
+        private String[] DataType_type_info = new String[]{'DataType','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
+        private String[] Description_type_info = new String[]{'Description','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
+        private String[] Country_type_info = new String[]{'Country','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
+        private String[] State_type_info = new String[]{'State','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
+        private String[] apex_schema_type_info = new String[]{'http://avatax.avalara.com/services','true','false'};
+        private String[] field_order_type_info = new String[]{'ParameterBagId','Category','Name','DataType','Description','Country','State'};
+    }
+
+    global class ParameterBagItem {
+        global String Name;
+        global String Value;
+        global String UOMCode;
+        private String[] Name_type_info = new String[]{'Name','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
+        private String[] Value_type_info = new String[]{'Value','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
+        private String[] UOMCode_type_info = new String[]{'UOMCode','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
+        private String[] apex_schema_type_info = new String[]{'http://avatax.avalara.com/services','true','false'};
+        private String[] field_order_type_info = new String[]{'Name','Value','UOMCode'};
+    }
+
     global class ArrayOfTaxDetail {
         global TaxSvc.TaxDetail[] TaxDetail;
         private String[] TaxDetail_type_info = new String[]{'TaxDetail','http://avatax.avalara.com/services','TaxDetail','0','-1','true'};
@@ -851,6 +931,15 @@ global with sharing class TaxSvc {
         global String TaxGroup;
         global String RateType;
         global String StateAssignedNo;
+        global String TaxableUnits;
+        global String NonTaxableUnits;
+        global String ExemptUnits; 
+        global String UnitOfBasis;
+        global String TaxTypeGroupId;
+        global String TaxSubTypeId;
+        global Boolean IsFee;
+        global String TaxTypeId;    //Added in version 13.65.2.0
+
         private String[] Country_type_info = new String[]{'Country','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
         private String[] Region_type_info = new String[]{'Region','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
         private String[] JurisType_type_info = new String[]{'JurisType','http://avatax.avalara.com/services','JurisdictionType','1','1','false'};
@@ -869,8 +958,16 @@ global with sharing class TaxSvc {
         private String[] TaxGroup_type_info = new String[]{'TaxGroup','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
         private String[] RateType_type_info = new String[]{'RateType','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
         private String[] StateAssignedNo_type_info = new String[]{'StateAssignedNo','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
+        private String[] TaxableUnits_type_info = new String[]{'TaxableUnits','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
+        private String[] NonTaxableUnits_type_info = new String[]{'NonTaxableUnits','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
+        private String[] ExemptUnits_type_info = new String[]{'ExemptUnits','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
+        private String[] UnitOfBasis_type_info = new String[]{'UnitOfBasis','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
+        private String[] TaxTypeGroupId_type_info = new String[]{'TaxTypeGroupId','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
+        private String[] TaxSubTypeId_type_info = new String[]{'TaxSubTypeId','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
+        private String[] IsFee_type_info = new String[]{'IsFee','http://www.w3.org/2001/XMLSchema','boolean','0','1','false'};
+        private String[] TaxTypeId_type_info = new String[]{'TaxTypeId','http://www.w3.org/2001/XMLSchema','string','0','1','false'};    //Added in version 13.65.2.0
         private String[] apex_schema_type_info = new String[]{'http://avatax.avalara.com/services','true','false'};
-        private String[] field_order_type_info = new String[]{'Country','Region','JurisType','JurisCode','TaxType','Base','Taxable','Rate','Tax','TaxCalculated','NonTaxable','Exemption','JurisName','TaxName','TaxAuthorityType','TaxGroup','RateType','StateAssignedNo'};
+        private String[] field_order_type_info = new String[]{'Country','Region','JurisType','JurisCode','TaxType','Base','Taxable','Rate','Tax','TaxCalculated','NonTaxable','Exemption','JurisName','TaxName','TaxAuthorityType','TaxGroup','RateType','StateAssignedNo','TaxableUnits','NonTaxableUnits','ExemptUnits','UnitOfBasis','TaxTypeGroupId','TaxSubTypeId','IsFee','TaxTypeId'}; //Added in version 13.65.2.0
     }
     global class Message {
         global String Summary;
@@ -890,6 +987,11 @@ global with sharing class TaxSvc {
         private String[] apex_schema_type_info = new String[]{'http://avatax.avalara.com/services','true','false'};
         private String[] field_order_type_info = new String[]{'Summary','Details','HelpLink','RefersTo','Severity','Source'};
     }
+    global class Details{
+    global String InvoiceMessage;
+    private String[] InvoiceMessage_type_info = new String[]{'InvoiceMessage','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
+    private String[] field_order_type_info = new String[]{'InvoiceMessage'};
+    }
      global class TaxLine {
         global String No;
         global String TaxCode;
@@ -907,6 +1009,12 @@ global with sharing class TaxSvc {
         global Date ReportingDate = Date.Today();
         global String AccountingMethod = 'Accrual';
         global Boolean TaxIncluded;
+        global String VATCode;
+        global String VATNumberType;
+        public String HSCode;            //Added by Vijay on 11 Jan 2018 for CALC 17.12 release - SDK version 13.65.4.0
+        public String HSCodeUsed;        //Added by Vijay on 11 Jan 2018 for CALC 17.12 release - SDK version 13.65.4.0
+        public Decimal CIF = 0.0;        //Added by Vijay on 11 Jan 2018 for CALC 17.12 release - SDK version 13.65.4.0
+        
         private String[] No_type_info = new String[]{'No','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
         private String[] TaxCode_type_info = new String[]{'TaxCode','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
         private String[] Taxability_type_info = new String[]{'Taxability','http://www.w3.org/2001/XMLSchema','boolean','1','1','false'};
@@ -923,8 +1031,14 @@ global with sharing class TaxSvc {
         private String[] ReportingDate_type_info = new String[]{'ReportingDate','http://www.w3.org/2001/XMLSchema','date','1','1','false'};
         private String[] AccountingMethod_type_info = new String[]{'AccountingMethod','http://avatax.avalara.com/services','AccountingMethod','1','1','false'};
         private String[] TaxIncluded_type_info = new String[]{'TaxIncluded','http://www.w3.org/2001/XMLSchema','boolean','0','1','false'};
+        private String[] VATCode_type_info = new String[]{'VATCode','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
+        private String[] VATNumberType_type_info = new String[]{'VATNumberType','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
+        private String[] HSCode_type_info = new String[]{'HSCode','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
+        private String[] HSCodeUsed_type_info = new String[]{'HSCodeUsed','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
+        private String[] CIF_type_info = new String[]{'CIF','http://www.w3.org/2001/XMLSchema','decimal','1','1','false'};
+                 
         private String[] apex_schema_type_info = new String[]{'http://avatax.avalara.com/services','true','false'};
-        private String[] field_order_type_info = new String[]{'No','TaxCode','Taxability','BoundaryLevel','Exemption','Discount','Taxable','Rate','Tax','TaxCalculated','TaxDetails','ExemptCertId','TaxDate','ReportingDate','AccountingMethod','TaxIncluded'};
+        private String[] field_order_type_info = new String[]{'No','TaxCode','Taxability','BoundaryLevel','Exemption','Discount','Taxable','Rate','Tax','TaxCalculated','TaxDetails','ExemptCertId','TaxDate','ReportingDate','AccountingMethod','TaxIncluded','VATCode','VATNumberType','HSCode','HSCodeUsed','CIF'};
     }
     global class ArrayOfGetTaxResult {
         global TaxSvc.GetTaxResult[] GetTaxResult;
@@ -935,9 +1049,11 @@ global with sharing class TaxSvc {
     global class Line {
         global String No;
         global String OriginCode;
+        global String BusinessIdentificationNo;
         global String DestinationCode;
         global String ItemCode;
         global String TaxCode;
+        public String HSCode;        //Added by Vijay on 11 Jan 2018 for CALC 17.12 release - SDK Version 13.65.4.0
         global Decimal Qty = 1.0;
         global Decimal Amount = 0.0;
         global Boolean Discounted = false;
@@ -949,11 +1065,15 @@ global with sharing class TaxSvc {
         global String Description;
         global TaxSvc.TaxOverride TaxOverride;
         global Boolean TaxIncluded;
+        global TaxSvc.ArrayOfParameterBagItem ParameterBagItems;
+
         private String[] No_type_info = new String[]{'No','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
         private String[] OriginCode_type_info = new String[]{'OriginCode','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
+        private String[] BusinessIdentificationNo_type_info = new String[]{'BusinessIdentificationNo','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
         private String[] DestinationCode_type_info = new String[]{'DestinationCode','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
         private String[] ItemCode_type_info = new String[]{'ItemCode','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
         private String[] TaxCode_type_info = new String[]{'TaxCode','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
+        private String[] HSCode_type_info = new String[]{'HSCode','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
         private String[] Qty_type_info = new String[]{'Qty','http://www.w3.org/2001/XMLSchema','decimal','1','1','false'};
         private String[] Amount_type_info = new String[]{'Amount','http://www.w3.org/2001/XMLSchema','decimal','1','1','false'};
         private String[] Discounted_type_info = new String[]{'Discounted','http://www.w3.org/2001/XMLSchema','boolean','1','1','false'};
@@ -965,20 +1085,34 @@ global with sharing class TaxSvc {
         private String[] Description_type_info = new String[]{'Description','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
         private String[] TaxOverride_type_info = new String[]{'TaxOverride','http://avatax.avalara.com/services','TaxOverride','0','1','false'};
         private String[] TaxIncluded_type_info = new String[]{'TaxIncluded','http://www.w3.org/2001/XMLSchema','boolean','0','1','false'};
+        private String[] ParameterBagItems_type_info = new String[]{'ParameterBagItems','http://avatax.avalara.com/services','ArrayOfParameterBagItem','0','1','false'};
         private String[] apex_schema_type_info = new String[]{'http://avatax.avalara.com/services','true','false'};
-        private String[] field_order_type_info = new String[]{'No','OriginCode','DestinationCode','ItemCode','TaxCode','Qty','Amount','Discounted','RevAcct','Ref1','Ref2','ExemptionNo','CustomerUsageType','Description','TaxOverride','TaxIncluded'};
+        private String[] field_order_type_info = new String[]{'No','OriginCode','BusinessIdentificationNo','DestinationCode','ItemCode','TaxCode','HSCode','Qty','Amount','Discounted','RevAcct','Ref1','Ref2','ExemptionNo','CustomerUsageType','Description','TaxOverride','TaxIncluded','ParameterBagItems'};
     }
 
 ////////////////////////////////////////////////////////////////////////////////
 // helper classes - visible to other classes within AddressSvc, 
 // but not to the end user
 ////////////////////////////////////////////////////////////////////////////////
-   global class ApplyPaymentResponse_element {
+    global class ApplyPaymentResponse_element {
         global TaxSvc.ApplyPaymentResult ApplyPaymentResult;
         private String[] ApplyPaymentResult_type_info = new String[]{'ApplyPaymentResult','http://avatax.avalara.com/services','ApplyPaymentResult','0','1','false'};
         private String[] apex_schema_type_info = new String[]{'http://avatax.avalara.com/services','true','false'};
         private String[] field_order_type_info = new String[]{'ApplyPaymentResult'};
     }
+    global class GetParameterBagItemsResponse_element {
+        global TaxSvc.GetParameterBagItemsResult GetParameterBagItemsResult;
+        private String[] GetParameterBagItemsResult_type_info = new String[]{'GetParameterBagItemsResult','http://avatax.avalara.com/services','GetParameterBagItemsResult','0','1','false'};
+        private String[] apex_schema_type_info = new String[]{'http://avatax.avalara.com/services','true','false'};
+        private String[] field_order_type_info = new String[]{'GetParameterBagItemsResult'};
+    }
+    global class GetAllParameterBagItemsResponse_element {
+        global TaxSvc.GetAllParameterBagItemsResult GetAllParameterBagItemsResult;
+        private String[] GetAllParameterBagItemsResult_type_info = new String[]{'GetAllParameterBagItemsResult','http://avatax.avalara.com/services','GetAllParameterBagItemsResult','0','1','false'};
+        private String[] apex_schema_type_info = new String[]{'http://avatax.avalara.com/services','true','false'};
+        private String[] field_order_type_info = new String[]{'GetAllParameterBagItemsResult'};
+    }
+
     global class IsAuthorized_element {
         global String Operations;
         private String[] Operations_type_info = new String[]{'Operations','http://www.w3.org/2001/XMLSchema','string','0','1','false'};
@@ -1075,6 +1209,17 @@ global with sharing class TaxSvc {
         private String[] apex_schema_type_info = new String[]{'http://avatax.avalara.com/services','true','false'};
         private String[] field_order_type_info = new String[]{'ApplyPaymentRequest'};
     }
+    global class GetParameterBagItems_element {
+        global TaxSvc.GetParameterBagItemsRequest GetParameterBagItemsRequest;
+        private String[] GetParameterBagItemsRequest_type_info = new String[]{'GetParameterBagItemsRequest','http://avatax.avalara.com/services','GetParameterBagItemsRequest','0','1','false'};
+        private String[] apex_schema_type_info = new String[]{'http://avatax.avalara.com/services','true','false'};
+        private String[] field_order_type_info = new String[]{'GetParameterBagItemsRequest'};
+    }
+    global class GetAllParameterBagItems_element {
+        private String[] apex_schema_type_info = new String[]{'http://avatax.avalara.com/services','true','false'};
+        private String[] field_order_type_info = new String[]{};
+    }
+
     global class ReconcileTaxHistory_element {
         global TaxSvc.ReconcileTaxHistoryRequest ReconcileTaxHistoryRequest;
         private String[] ReconcileTaxHistoryRequest_type_info = new String[]{'ReconcileTaxHistoryRequest','http://avatax.avalara.com/services','ReconcileTaxHistoryRequest','0','1','false'};

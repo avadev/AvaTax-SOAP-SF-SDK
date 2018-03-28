@@ -19,6 +19,7 @@ public class TaxSvcTestDemo
 
     public String LineNo1 {get; set;}
     public String ItemCode1 {get; set;}
+    public String TaxCode1 {get; set;}
     public String ItemDesc1 {get; set;}
     public String UnitCost1 {get; set;}
     public String Qty1 {get; set;}
@@ -27,23 +28,16 @@ public class TaxSvcTestDemo
 
     public Address orgAddr {get;set;}
     public Address dstAddr {get;set;}
-
-    public TaxSvcTestDemo()
-    {
-        Version = 'Enter  Service Url, Username/Account #, and Password/License Key then Press "Test Connect"';
-        OrgValidateResult = 'Enter Street Address, and at Least 2/3 of City, State and Zip, then press "Validate Address"';
-        DstValidateResult = OrgValidateResult;
-        DocType = 'SalesOrder';
-        orgAddr = new Address();
-        dstAddr = new Address();
-        LineNo1 = '1';
-        ItemCode1 = 'Item123';
-        ItemDesc1 = 'SKU Item123 Description';
-        UnitCost1 = '25.00';
-        Qty1 = '4.0';
-        Amount1 = '100.00';
-    }
     
+    public ParameterBagItem parameterBagItem {get;set;}
+
+    public class ParameterBagItem
+    {
+        public String Name {get;set;}
+        public String Value {get;set;}
+    }
+
+
     public class Address
     {
         public String Line1 {get;set;}
@@ -76,49 +70,109 @@ public class TaxSvcTestDemo
               rval.City = City;
               rval.Region = Region;
               rval.PostalCode = PostalCode;
+              //rval.Country = 'GB';
+              return rval;
+        }
+        public TaxSvc.BaseAddress TaxAddress1() 
+        {
+              TaxSvc.BaseAddress rval = new TaxSvc.BaseAddress();
+              rval.Line1 = Line1;
+              rval.Line2 = Line2;
+              rval.Line3 = Line3;
+              rval.City = City;
+              rval.Region = Region;
+              rval.PostalCode = PostalCode;
               rval.Country = Country;
               return rval;
         }
     }
 
+    public TaxSvcTestDemo()
+    {
+        Version = 'Enter  Service Url, Username/Account #, and Password/License Key then Press "Test Connect" to authenticate the credentials';
+        OrgValidateResult = 'Enter Street Address, and at Least 2/3 of City, State and Zip, then press "Validate Address"';
+        DstValidateResult = OrgValidateResult;
+        DocType = 'SalesInvoice';
+        orgAddr = new Address();
+        dstAddr = new Address();
+        LineNo1 = '1';
+        ItemCode1 = 'Item123';
+        TaxCode1 = 'PC080100';
+        ItemDesc1 = 'SKU Item123 Description';
+        UnitCost1 = '25.00';
+        Qty1 = '6.0';
+        Amount1 = '100.00';
+    }
+    
     public PageReference CalcTax()
     {
-        TaxSvc.TaxSvcSoap taxSvc = new TaxSvc.TaxSvcSoap(SvcURL);
+        TaxSvc.TaxSvcSoap taxSvc = new TaxSvc.TaxSvcSoap(SvcURL );
         taxSvc.Security.UsernameToken.Username = UserName;
         taxSvc.Security.UsernameToken.Password = PassWord;
         taxSvc.Profile.Client = 'SFDemo,1,0';
+        taxSvc.Profile.ClientSupportMultiTax = true;
 
         TaxSvc.GetTaxRequest gtreq = new TaxSvc.GetTaxRequest();
         gtreq.DocCode = 'SO123';
         gtreq.DocType = 'SalesOrder';
         gtreq.CustomerCode = 'CustNumber1';
-        gtreq.CompanyCode = CompCode;
+        gtreq.CompanyCode = 'Vijay1';
         gtreq.DetailLevel = 'Tax';
+        //gtreq.IsSellerImporterOfRecord = false;
 
         gtreq.Addresses = new TaxSvc.ArrayOfBaseAddress();
         gtreq.Addresses.BaseAddress = new TaxSvc.BaseAddress[2];
 
         gtreq.Addresses.BaseAddress[0] = orgAddr.TaxAddress();
-        gtreq.Addresses.BaseAddress[1] = dstAddr.TaxAddress();
+        gtreq.Addresses.BaseAddress[1] = dstAddr.TaxAddress1();
 
         gtreq.Addresses.BaseAddress[0].AddressCode = 'Origin';
         gtreq.Addresses.BaseAddress[1].AddressCode = 'Destination';
 
         gtreq.OriginCode = 'Origin';
+        gtreq.BusinessIdentificationNo = '0123';
         gtreq.DestinationCode = 'Destination';
 
+        //Set ParameterBagItems at header level
+        /*gtreq.ParameterBagItems = new TaxSvc.ArrayOfParameterBagItem();
+        gtreq.ParameterBagItems.ParameterBagItem = new TaxSvc.ParameterBagItem[1];
+        gtreq.ParameterBagItems.ParameterBagItem[0] = new TaxSvc.ParameterBagItem();*/
+        
+        //ParameterBagItem at header level
+        //gtreq.ParameterBagItems.ParameterBagItem[0].Name = 'FirstUse';
+        //gtreq.ParameterBagItems.ParameterBagItem[0].Value = 'True'; 
+
+        //gtreq.ParameterBagItems.ParameterBagItem[0].Name = 'AvaTax.Recycle.ScreenSize';
+        //gtreq.ParameterBagItems.ParameterBagItem[0].Value = '2'; 
+        
+        
         gtreq.Lines = new TaxSvc.ArrayOfLine();
-        gtreq.Lines.Line = new TaxSvc.Line[2];
+        gtreq.Lines.Line = new TaxSvc.Line[1];
         gtreq.Lines.Line[0] = new TaxSvc.Line();
         
         gtreq.Lines.Line[0].No = LineNo1;
-        gtreq.Lines.Line[0].ItemCode = ItemCode1;
-        gtreq.Lines.Line[0].Description = ItemDesc1;
+        gtreq.Lines.Line[0].ItemCode = TaxCode1;
+        gtreq.Lines.Line[0].TaxCode = 'PC080100';
+        gtreq.Lines.Line[0].Description = ItemDesc1;               
+
+        //Set ParameterBagItems at Line level
+        gtreq.Lines.Line[0].ParameterBagItems = new TaxSvc.ArrayOfParameterBagItem();
         
+        gtreq.Lines.Line[0].ParameterBagItems.ParameterBagItem = new TaxSvc.ParameterBagItem[2];
+        
+        gtreq.Lines.Line[0].ParameterBagItems.ParameterBagItem[0] = new TaxSvc.ParameterBagItem();
+        gtreq.Lines.Line[0].ParameterBagItems.ParameterBagItem[0].Name = 'AvaTax.Recycle.ScreenSize';
+        gtreq.Lines.Line[0].ParameterBagItems.ParameterBagItem[0].Value = '2';
+        //gtreq.Lines.Line[0].ParameterBagItems.ParameterBagItem[0].UOMCode = 'kg';
+        
+        gtreq.Lines.Line[0].ParameterBagItems.ParameterBagItem[1] = new TaxSvc.ParameterBagItem();
+        gtreq.Lines.Line[0].ParameterBagItems.ParameterBagItem[1].Name = 'FirstUse';
+        gtreq.Lines.Line[0].ParameterBagItems.ParameterBagItem[1].Value = 'True';
+
         try
         {
              gtreq.Lines.Line[0].Qty = decimal.valueOf(Qty1);
-             gtreq.DocDate = Date.Today();
+             gtreq.DocDate = Date.newInstance(2018, 01, 23); //Date.Today();
              gtreq.Lines.Line[0].Amount = decimal.valueOf(UnitCost1) * decimal.valueOf(Qty1);
         } 
         catch(Exception amtEx)
@@ -127,10 +181,14 @@ public class TaxSvcTestDemo
             return null;
         }
          
+        //gtreq.setTimeout(20);
         TaxSvc.GetTaxResult gtres = null;
+        //TaxSvc.GetAllParameterBagItemsResult gtparamres = null;
         try
-        {
+        {            
+            //setTimeout=120000;
             gtres = taxSvc.GetTax(gtreq);
+            //gtparamres = taxSvc.GetAllParameterBagItemsResult();
         }
         catch(Exception ex)
         {
@@ -148,7 +206,7 @@ public class TaxSvcTestDemo
              {
                   Rate = td.Rate * 100.00;
                   TaxBreakDown += td.JurisType + '=' + td.JurisName + ': $' + td.Tax.format() + makepad(td.Tax.scale()) + ' ( ' + Rate.format() + makepad(Rate.scale()) + '% ); ';
-             } 
+             }
         }
         else
         {
@@ -176,6 +234,7 @@ public class TaxSvcTestDemo
         taxSvc.Security.UsernameToken.Username = UserName;
         taxSvc.Security.UsernameToken.Password = PassWord;
         taxSvc.Profile.Client = 'SFDemo,1,0';
+        taxSvc.Profile.ClientSupportMultiTax = false;
         TaxSvc.PingResult pres = null;
         
         try 
